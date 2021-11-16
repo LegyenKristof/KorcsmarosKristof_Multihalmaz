@@ -85,12 +85,17 @@ public class Multihalmaz<T>{
     }
 
     public Multihalmaz<T> unio(Multihalmaz<T> masikHalmaz){
-        Multihalmaz<T> unio = masikHalmaz;
+        Multihalmaz<T> unio = new Multihalmaz<>();
+        for(int i = 0; i < masikHalmaz.getSize(); i++){
+            unio.elemLista.add(masikHalmaz.elemLista.get(i));
+            unio.mennyisegLista.add(masikHalmaz.mennyisegLista.get(i));
+        }
+
         for(int i = 0; i < elemLista.size(); i++){
             T elem = elemLista.get(i);
             if(unio.isElement(elem)){
                 int index = unio.elemLista.indexOf(elem);
-                unio.mennyisegLista.set(index, mennyisegLista.get(i));
+                unio.mennyisegLista.set(index, mennyisegLista.get(i) + unio.mennyisegLista.get(index));
             }
             else{
                 unio.elemLista.add(elem);
@@ -102,6 +107,7 @@ public class Multihalmaz<T>{
 
     public Multihalmaz<T> intersection(Multihalmaz<T> masikHalmaz){
         Multihalmaz<T> intersection = new Multihalmaz<>();
+
         for (int i = 0; i < elemLista.size(); i++){
             T elem = elemLista.get(i);
             if(masikHalmaz.isElement(elem)){
@@ -113,18 +119,23 @@ public class Multihalmaz<T>{
     }
 
     public Multihalmaz<T> different(Multihalmaz<T> masikHalmaz){
-        Multihalmaz<T> different = this;
-        for (int i = 0; i < different.getSize(); i++){
-            T elem = elemLista.get(i);
-            if(masikHalmaz.isElement(elem)){
-                int mennyiseg = mennyisegLista.get(i) - masikHalmaz.mennyisegLista.get(masikHalmaz.elemLista.indexOf(elem));
+        Multihalmaz<T> different = new Multihalmaz<>();
+        for(int i = 0; i < this.getSize(); i++){
+            different.elemLista.add(elemLista.get(i));
+            different.mennyisegLista.add(mennyisegLista.get(i));
+        }
+
+        for (int i = 0; i < masikHalmaz.getSize(); i++){
+            T elem = masikHalmaz.elemLista.get(i);
+            if(different.isElement(elem)){
+                int index = different.elemLista.indexOf(elem);
+                int mennyiseg = different.mennyisegLista.get(index) - masikHalmaz.mennyisegLista.get(i);
                 if(mennyiseg <= 0){
-                    different.elemLista.remove(i);
-                    different.mennyisegLista.remove(i);
-                    i--;
+                    different.elemLista.remove(index);
+                    different.mennyisegLista.remove(index);
                 }
                 else{
-                    different.mennyisegLista.set(i, mennyiseg);
+                    different.mennyisegLista.set(index, mennyiseg);
                 }
             }
         }
